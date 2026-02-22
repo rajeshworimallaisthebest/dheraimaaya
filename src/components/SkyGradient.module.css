@@ -1,0 +1,21 @@
+/* ============================================================
+   SkyGradient — Atmospheric Sky Tint Layer
+   ============================================================
+   Full-viewport div behind all biome layers.
+   Provides a dusty-blue gradient at the top of the scene.
+   ============================================================ */
+
+.sky {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  z-index: 0;
+  will-change: opacity;
+  /* Default: subtle 12% opacity gradient ending at 40% height */
+  background: linear-gradient(
+    to bottom,
+    var(--color-sky-tint) 0%,
+    transparent 40%
+  );
+  opacity: 0.12;
+}

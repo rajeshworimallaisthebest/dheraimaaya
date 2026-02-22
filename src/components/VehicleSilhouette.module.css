@@ -1,0 +1,95 @@
+/* ============================================================
+   VehicleSilhouette — Third-Person Scene Vehicles
+   ============================================================
+   Side-view silhouettes positioned in the parallax world,
+   not as cockpit overlays.  Plane flies in the upper third,
+   car/walker sit on the terrain ground line.
+
+   GSAP controls opacity cross-fade and positional animation
+   (Steps 6–9); CSS only provides layout and GPU compositing.
+   ============================================================ */
+
+.container {
+  position: absolute;
+  inset: 0;
+  z-index: 2;            /* above TerrainLine (0), below VehicleSwitcher (3) */
+  pointer-events: none;
+  overflow: hidden;
+}
+
+/* ── Individual silhouette wrappers ── */
+.silhouette {
+  position: absolute;
+  opacity: 0;
+  will-change: opacity, transform;
+}
+
+/* ── Plane — upper area of the viewport ── */
+.plane {
+  composes: silhouette;
+  /* Horizontally centered, upper third */
+  left: 50%;
+  top: 22%;
+  transform: translateX(-50%);
+}
+
+/* ── Car — ground level, horizontally centered ── */
+.car {
+  composes: silhouette;
+  left: 50%;
+  bottom: 18%;
+  transform: translateX(-50%);
+}
+
+/* ── Walker — ground level, horizontally centered ── */
+.walker {
+  composes: silhouette;
+  left: 50%;
+  bottom: 18%;
+  transform: translateX(-50%);
+}
+
+/* ── Trail line behind the plane ── */
+.trail {
+  position: absolute;
+  /* Vertically aligned to the plane's center line */
+  top: 22%;
+  left: 0;
+  width: 55%;              /* extends from left edge to ~plane center */
+  height: 40px;
+  pointer-events: none;
+  opacity: 0;
+  will-change: opacity;
+}
+
+.trailSvg {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+.trailDash {
+  will-change: stroke-dashoffset;
+}
+
+/* ── Dust particles behind the car ── */
+.dust {
+  position: absolute;
+  /* Positioned to the left of center (behind the car's rear) */
+  left: calc(50% - 80px);
+  bottom: 18%;
+  width: 40px;
+  height: 20px;
+  pointer-events: none;
+  opacity: 0;
+  will-change: opacity, bottom;
+}
+
+/* ── Companion walker offset ─ dual silhouette ── */
+.companionOffset {
+  position: absolute;
+  left: 22px;
+  top: 3px;
+  opacity: 0.7;
+  transform: scaleX(-1);
+}

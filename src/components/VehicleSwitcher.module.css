@@ -1,0 +1,54 @@
+/* ============================================================
+   VehicleSwitcher — Foreground Frame & Camera Shake
+   ============================================================ */
+
+/* Container wraps the active vehicle frame */
+.switcher {
+  position: absolute;
+  inset: 0;
+  z-index: 3;
+  pointer-events: none;
+  will-change: opacity, transform;
+}
+
+/* ── Individual frame wrappers ── */
+.frame {
+  position: absolute;
+  inset: 0;
+  opacity: 0;
+  will-change: opacity;
+  /* GSAP is the sole controller of opacity — no CSS transition
+     to avoid races during rapid transport switches (Step 27). */
+}
+
+.frameActive {
+  opacity: 1;
+}
+
+/* ── Walking mode — subtle hand-held drift ── */
+.walkingShake {
+  /* The actual shake is driven by a GSAP timeline
+     that randomly translates + rotates the cockpit.
+     This class just ensures GPU compositing. */
+  will-change: transform;
+}
+
+/* ── Vignette overlay for walking mode ──
+   Simulates peripheral vision without a vehicle frame */
+.walkingVignette {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background: radial-gradient(
+    ellipse 70% 70% at 50% 50%,
+    transparent 50%,
+    rgba(26, 24, 22, 0.45) 100%
+  );
+  opacity: 0;
+  will-change: opacity;
+  /* GSAP is the sole controller of opacity (Step 27). */
+}
+
+.walkingVignetteActive {
+  opacity: 1;
+}

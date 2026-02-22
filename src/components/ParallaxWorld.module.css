@@ -1,0 +1,68 @@
+/* ============================================================
+   ParallaxWorld — Background Biome Layers
+   ============================================================ */
+
+.world {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  z-index: 1;
+}
+
+/* ── Each biome is a stack of 3 depth layers ── */
+.biome {
+  position: absolute;
+  inset: 0;
+  opacity: 0;
+  will-change: opacity;
+  /* GSAP is the sole controller of opacity — no CSS transition
+     to avoid races during rapid biome switches. */
+}
+
+.biomeActive {
+  opacity: 1;
+}
+
+/* ── Individual parallax depth layers ── */
+.layer {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  will-change: transform;
+}
+
+/*
+ * Each layer slides at a different rate.
+ * The actual transform is set via GSAP in the component,
+ * but we prep GPU compositing here.
+ */
+.layerFar {
+  composes: layer;
+  /* Slowest — most distant */
+  filter: blur(1.5px);   /* Step 21: constant depth-of-field blur */
+}
+
+.layerMid {
+  composes: layer;
+  /* Medium speed */
+}
+
+.layerNear {
+  composes: layer;
+  /* Fastest — closest to camera */
+}
+
+/* ── Ground line visual anchor (Step 20) ── */
+.groundLine {
+  position: absolute;
+  left: 0;
+  bottom: 15%;  /* ≈85% from top */
+  width: 100%;
+  height: 1px;
+  background: var(--color-silk);
+  opacity: 0.15;
+  pointer-events: none;
+  z-index: 2;
+}

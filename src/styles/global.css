@@ -1,0 +1,112 @@
+/* ============================================================
+   Project Pyari — Global Styles
+   ============================================================ */
+
+@import './tokens.css';
+
+/* --- Reset ------------------------------------------------- */
+*,
+*::before,
+*::after {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html {
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
+  scroll-behavior: auto; /* GSAP ScrollSmoother controls scrolling */
+}
+
+body {
+  font-family: var(--font-serif);
+  font-weight: 350;
+  color: var(--color-silk);
+  background-color: var(--color-umber);
+  line-height: 1.6;
+  overflow-x: hidden;
+  min-height: 100vh;
+  min-height: 100dvh;
+}
+
+/* --- ScrollSmoother wrapper structure ---------------------- */
+/* ScrollSmoother applies its own position:fixed + height:100%
+   when it initialises. Before that we just need a normal block
+   container so the Gatekeeper renders correctly.              */
+#smooth-wrapper {
+  width: 100%;
+}
+
+#smooth-content {
+  overflow: visible;
+  width: 100%;
+}
+
+/* --- Typography base --------------------------------------- */
+h1, h2, h3, h4, h5, h6 {
+  font-family: var(--font-serif);
+  font-weight: 400;
+  line-height: 1.15;
+}
+
+.sans {
+  font-family: var(--font-sans);
+  font-weight: 300;
+  letter-spacing: var(--tracking-sans);
+}
+
+/* --- Act sections ------------------------------------------ */
+.act {
+  position: relative;
+  width: 100%;
+  min-height: 100vh;
+  min-height: 100dvh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* --- Utility: screen-reader only --------------------------- */
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+/* --- Reduced motion --------------------------------------- */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+/* --- Selection color -------------------------------------- */
+::selection {
+  background-color: var(--color-ember);
+  color: var(--color-umber);
+}
+
+/* --- Return-to-top entrance animation ---------------------- */
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(12px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}

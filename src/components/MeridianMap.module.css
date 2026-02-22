@@ -1,0 +1,343 @@
+/* ============================================================
+   MeridianMap — Act II: The Global Meridian
+   Minimalist Narrative Map
+   ============================================================ */
+
+/* ── Pinned container ───────────────────────── */
+/* 100vh natural height. GSAP ScrollTrigger pins
+   for 6000px — the spacer is injected automatically. */
+.container {
+  position: relative;
+  width: 100%;
+  height: 100vh;
+  height: 100dvh;
+  background-color: var(--color-umber);
+  overflow: hidden;
+}
+
+/* ── World SVG ──────────────────────────────── */
+.mapSvg {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  display: block;
+}
+
+/* Simplified continent silhouettes:
+   Deep Umber fill, 1px Silk stroke (subtle but visible) */
+.landmass {
+  fill: var(--color-umber);
+  stroke: var(--color-silk);
+  stroke-width: 1;
+  stroke-opacity: 0.35;
+  vector-effect: non-scaling-stroke;
+}
+
+/* ── Meridian ink path: 2px Silk ────────────── */
+.meridianPath {
+  fill: none;
+  stroke: var(--color-silk);
+  stroke-width: 2;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  vector-effect: non-scaling-stroke;
+}
+
+.meridianGlow {
+  fill: none;
+  stroke: var(--color-silk);
+  stroke-width: 6;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  opacity: 0.12;
+  filter: blur(4px);
+  vector-effect: non-scaling-stroke;
+}
+
+/* ── Node dots ──────────────────────────────── */
+.nodeCircle {
+  fill: var(--color-ember);
+  stroke: var(--color-ember);
+  stroke-width: 1.5;
+  transition: fill 0.4s ease;
+  vector-effect: non-scaling-stroke;
+}
+
+.nodeMilestone {
+  fill: none;
+  stroke: var(--color-ember);
+  stroke-width: 0.8;
+  opacity: 0;
+  vector-effect: non-scaling-stroke;
+}
+
+/* ── Node labels ────────────────────────────── */
+.nodeLabel {
+  font-family: var(--font-sans);
+  font-size: 9px;
+  font-weight: 300;
+  letter-spacing: 0.06em;
+  fill: var(--color-silk);
+  opacity: 0;
+  pointer-events: none;
+}
+
+.nodeSublabel {
+  font-family: var(--font-serif);
+  font-size: 7px;
+  font-weight: 350;
+  fill: var(--color-ember);
+  opacity: 0;
+  pointer-events: none;
+}
+
+/* ── Phase labels (section headings on map) ─── */
+.phaseLabel {
+  font-family: var(--font-sans);
+  font-size: 11px;
+  font-weight: 300;
+  letter-spacing: var(--tracking-sans);
+  text-transform: uppercase;
+  fill: var(--color-silk);
+  opacity: 0;
+}
+
+/* ── Phase title card (HTML overlay at viewport bottom) ────── */
+.phaseTitle {
+  position: absolute;
+  bottom: 4.5rem;
+  left: 50%;
+  transform: translateX(-50%);
+  font-family: var(--font-serif);
+  font-size: clamp(1.2rem, 3vw, 2.2rem);
+  font-weight: 350;
+  letter-spacing: var(--tracking-extreme);
+  color: var(--color-silk);
+  text-transform: uppercase;
+  opacity: 0;
+  white-space: nowrap;
+  pointer-events: none;
+  z-index: var(--z-base);
+}
+
+/* ============================================================
+   Blueprint Overlay
+   ============================================================ */
+
+.blueprintOverlay {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(26, 24, 22, 0.94);
+  opacity: 0;
+  pointer-events: none;
+  z-index: var(--z-overlay);
+}
+
+.blueprintSvg {
+  width: 80%;
+  max-width: 720px;
+  height: auto;
+  max-height: 80vh;
+}
+
+/* Faint background grid */
+.bpGrid {
+  stroke: var(--color-silk);
+  stroke-width: 0.15;
+  opacity: 0.12;
+}
+
+/* Drawing sheet border */
+.bpBorder {
+  fill: none;
+  stroke: var(--color-silk);
+  stroke-width: 0.5;
+  opacity: 0.4;
+}
+
+/* Building footprints */
+.bpBuilding {
+  fill: none;
+  stroke: var(--color-silk);
+  stroke-width: 1.2;
+}
+
+/* Center cross-hairs (dashed) */
+.bpCenterLine {
+  stroke: var(--color-silk);
+  stroke-width: 0.3;
+  stroke-dasharray: 4 3;
+  opacity: 0.3;
+}
+
+/* Interior walls */
+.bpInterior {
+  stroke: var(--color-silk);
+  stroke-width: 0.6;
+  stroke-dasharray: 2 2;
+  opacity: 0.5;
+}
+
+/* Building labels */
+.bpBuildingLabel {
+  font-family: var(--font-sans);
+  font-size: 10px;
+  font-weight: 300;
+  letter-spacing: 0.12em;
+  fill: var(--color-silk);
+  text-transform: uppercase;
+}
+
+/* Walkway dashes */
+.bpWalkway {
+  stroke: var(--color-ember);
+  stroke-width: 0.8;
+  stroke-dasharray: 6 4;
+  opacity: 0.6;
+}
+
+/* Dimension / measurement text */
+.bpDimension {
+  font-family: var(--font-sans);
+  font-size: 7px;
+  font-weight: 300;
+  fill: var(--color-silk);
+  opacity: 0.4;
+}
+
+/* Narrative annotation (italic serif) */
+.bpAnnotation {
+  font-family: var(--font-serif);
+  font-style: italic;
+  font-size: 8px;
+  font-weight: 350;
+  fill: var(--color-ember);
+  opacity: 0.7;
+}
+
+/* Scale bar */
+.bpScale {
+  stroke: var(--color-silk);
+  stroke-width: 0.6;
+  opacity: 0.5;
+}
+
+/* Compass */
+.bpCompass {
+  stroke: var(--color-silk);
+  stroke-width: 0.6;
+  opacity: 0.5;
+}
+
+.bpCompassArrow {
+  fill: var(--color-silk);
+  opacity: 0.5;
+}
+
+.bpCompassLabel {
+  font-family: var(--font-sans);
+  font-size: 9px;
+  font-weight: 300;
+  fill: var(--color-silk);
+  opacity: 0.6;
+}
+
+/* Title cartouche */
+.bpCartouche {
+  fill: none;
+  stroke: var(--color-silk);
+  stroke-width: 0.5;
+  opacity: 0.5;
+}
+
+.bpTitle {
+  font-family: var(--font-sans);
+  font-size: 11px;
+  font-weight: 400;
+  letter-spacing: 0.14em;
+  fill: var(--color-silk);
+  text-transform: uppercase;
+}
+
+.bpDivider {
+  stroke: var(--color-silk);
+  stroke-width: 0.3;
+  opacity: 0.4;
+}
+
+.bpSubtitle {
+  font-family: var(--font-sans);
+  font-size: 8px;
+  font-weight: 300;
+  letter-spacing: 0.1em;
+  fill: var(--color-silk);
+  opacity: 0.6;
+  text-transform: uppercase;
+}
+
+/* ============================================================
+   Pizza Swirl Overlay
+   ============================================================ */
+
+.pizzaOverlay {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0;
+  pointer-events: none;
+  z-index: calc(var(--z-overlay) + 10);
+}
+
+.pizzaText {
+  font-family: var(--font-serif);
+  font-size: clamp(3rem, 10vw, 8rem);
+  font-weight: 300;
+  letter-spacing: var(--tracking-extreme);
+  color: var(--color-silk);
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+
+/* ── Progress indicator ─────────────────────── */
+.progressTrack {
+  position: absolute;
+  right: 2rem;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 2px;
+  height: 30vh;
+  background-color: var(--color-silk-20);
+  z-index: var(--z-overlay);
+  pointer-events: none;
+}
+
+.progressFill {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 0%;
+  background-color: var(--color-ember);
+}
+
+/* ── Scroll hint ────────────────────────────── */
+.scrollHint {
+  position: absolute;
+  bottom: 3rem;
+  left: 50%;
+  transform: translateX(-50%);
+  font-family: var(--font-sans);
+  font-size: 0.7rem;
+  font-weight: 300;
+  letter-spacing: var(--tracking-sans);
+  color: var(--color-silk-20);
+  text-transform: uppercase;
+  pointer-events: none;
+  transition: opacity 0.4s ease;
+}

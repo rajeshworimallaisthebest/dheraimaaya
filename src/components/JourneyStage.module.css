@@ -1,0 +1,324 @@
+/* ============================================================
+   JourneyStage — Vehicle-POV Cockpit
+   ============================================================
+   Fixed viewport that layers:
+     1. Background (parallax biome scenery)
+     2. Mid-ground (location label + progress)
+     3. Foreground (vehicle frame overlay)
+     4. Overlay (MemoryCard when pinned)
+   ============================================================ */
+
+.stage {
+  position: relative;
+  /* Each node claims 100vh of scroll, so total height = nodeCount * 100vh.
+     Set dynamically via inline style. */
+  width: 100%;
+}
+
+/* ── Cockpit wrapper ──
+   Counter-scrolled via GSAP translateY in onUpdate to stay
+   viewport-locked. This avoids both position:fixed (broken
+   inside ScrollSmoother’s transform container) and
+   position:sticky (no scroll context inside the fixed wrapper).
+   VehicleSwitcher’s camera-shake targets .cockpit (child),
+   keeping transforms on separate elements.                    */
+.cockpitWrap {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  z-index: 10;
+  will-change: transform;
+}
+
+.cockpit {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  pointer-events: none;            /* allow scroll-through */
+}
+
+/* ── Parallax background container ── */
+.bgLayer {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  will-change: transform;
+}
+
+/* ── Vehicle foreground frame (PNG overlay) ── */
+/* NOTE: fgLayer is no longer used; VehicleSwitcher manages frames.
+   Kept as a no-op placeholder in case of future rollback. */
+.fgLayer {
+  position: absolute;
+  inset: 0;
+  z-index: 3;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  will-change: opacity;
+}
+
+.fgLayer img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  pointer-events: none;
+  user-select: none;
+}
+
+/* ── Mid-ground HUD: node label + progress ── */
+/* (Removed — labels now live inside the horizontal track) */
+
+/* ── Thin progress bar across the bottom ── */
+.progressTrack {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  height: 2px;
+  background: var(--color-silk-20);
+  z-index: 5;
+}
+
+.progressFill {
+  height: 100%;
+  width: 0%;                       /* driven by JS */
+  background: var(--color-ember);
+  will-change: width;
+  transition: width 0.15s linear;
+}
+
+/* ── Memory-card overlay ── */
+/* NOTE: opacity is driven exclusively by GSAP — no CSS transition
+   here, which would fight the JS tween and cause overlay flicker. */
+.memoryOverlay {
+  position: absolute;
+  inset: 0;
+  z-index: 6;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(26, 24, 22, 0.85);
+  opacity: 0;
+  pointer-events: none;
+  will-change: opacity;
+}
+
+/* ── Invisible milestone markers for ScrollTrigger (Fix D) ── */
+.milestoneMarker {
+  position: absolute;
+  left: 0;
+  width: 1px;
+  height: 1px;
+  pointer-events: none;
+  visibility: hidden;
+}
+
+/* ── Transport transition line sweep (Step 9 — replaces full-screen flash) ── */
+.transportFlash {
+  position: absolute;
+  left: 0;
+  top: 50%;
+  width: 100%;
+  height: 2px;
+  z-index: 7;
+  background: var(--color-ember);
+  opacity: 0;
+  pointer-events: none;
+  will-change: transform, opacity;
+  transform: scaleX(0);
+  transform-origin: left center;
+}
+
+/* ── "Our Journey" centered title overlay ── */
+.journeyTitle {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 20;
+  pointer-events: none;
+  opacity: 0;
+  will-change: opacity, transform;
+}
+
+.journeyTitleText {
+  font-family: var(--font-serif);
+  font-weight: 340;
+  font-size: clamp(2rem, 5vw, 4rem);
+  letter-spacing: 0.12em;
+  color: var(--color-silk);
+  text-shadow:
+    0 2px 20px rgba(26, 24, 22, 0.95),
+    0 0 60px rgba(26, 24, 22, 0.8);
+  -webkit-font-smoothing: antialiased;
+}
+
+/* ── Horizontal journey strip (horizontal scroll) ── */
+.horizontalTrack {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  display: flex;
+  align-items: flex-end;
+  height: 100%;
+  z-index: 4;
+  will-change: transform;
+  pointer-events: none;
+}
+
+.trackLine {
+  position: absolute;
+  bottom: 14%;
+  left: 0;
+  width: 100%;
+  height: 1px;
+  background: linear-gradient(
+    90deg,
+    transparent 0%,
+    var(--color-silk) 5%,
+    var(--color-silk) 95%,
+    transparent 100%
+  );
+  opacity: 0.08;
+}
+
+.trackNode {
+  flex-shrink: 0;
+  width: 100vw;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-end;
+  padding-bottom: 12vh;
+  position: relative;
+}
+
+/* Location-specific landmark SVGs — in flow, sits just above kite card */
+.landmark {
+  pointer-events: none;
+  user-select: none;
+  z-index: 1;
+  opacity: 0.75;
+  margin-bottom: 0.8rem;
+  flex-shrink: 0;
+}
+
+/* Place name label — attached to each node */
+.trackLabel {
+  font-family: var(--font-serif);
+  font-weight: 350;
+  font-size: clamp(1.4rem, 2.8vw, 2.6rem);
+  color: var(--color-silk);
+  letter-spacing: 0.03em;
+  white-space: nowrap;
+  opacity: 1;
+  margin-bottom: 1.2rem;
+  text-shadow:
+    0 1px 10px rgba(26, 24, 22, 0.95),
+    0 0 30px rgba(26, 24, 22, 0.6);
+  -webkit-font-smoothing: antialiased;
+}
+
+/* All nodes are always at full visibility — no active/adjacent fading */
+
+.trackDot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--color-ember);
+  opacity: 1;
+}
+
+/* ── Kite Card — tethered memory snippet above label ── */
+.kiteCard {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  gap: 0;
+  max-width: 22rem;
+  padding: 0.75rem 1rem;
+  background: rgba(26, 24, 22, 0.88);
+  border: 1px solid rgba(199, 154, 147, 0.25);
+  border-radius: 4px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.35);
+  opacity: 1;
+  pointer-events: none;
+  z-index: 3;
+}
+
+/* Wider two-column layout when a photo is present */
+.kiteCardPhoto {
+  flex-direction: row;
+  gap: 0.75rem;
+  max-width: none;
+  width: clamp(24rem, 40vw, 36rem);
+}
+
+.kiteTextCol {
+  flex: 1 1 0;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  min-width: 0;
+}
+
+.kiteBody {
+  font-family: var(--font-serif);
+  font-weight: 340;
+  font-size: clamp(0.78rem, 1.2vw, 0.92rem);
+  color: var(--color-silk);
+  opacity: 0.8;
+  letter-spacing: 0.02em;
+  line-height: 1.55;
+  margin: 0;
+}
+
+.kitePhotoFrame {
+  flex: 0 0 10rem;
+  width: 10rem;
+  border-radius: 2px;
+  border: 1px dashed rgba(199, 154, 147, 0.3);
+  overflow: hidden;
+  /* opacity driven by inline style for fade */
+}
+
+.kitePhoto {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+  filter: grayscale(1) contrast(0.9) brightness(0.85);
+}
+
+.kiteMemory {
+  font-family: var(--font-sans);
+  font-weight: 300;
+  font-size: clamp(0.68rem, 1vw, 0.8rem);
+  color: var(--color-ember);
+  letter-spacing: var(--tracking-sans);
+  line-height: 1.5;
+  border-top: 1px solid rgba(199, 154, 147, 0.15);
+  /* opacity, max-height, margin, padding driven by inline style for fade */
+}
+
+/* Tether — thin line connecting kite card to the label */
+.kiteTether {
+  width: 1px;
+  height: 1.2rem;
+  background: linear-gradient(
+    180deg,
+    rgba(199, 154, 147, 0.35) 0%,
+    rgba(199, 154, 147, 0.08) 100%
+  );
+  margin: 0 auto;
+  opacity: 1;
+}

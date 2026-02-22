@@ -1,0 +1,192 @@
+/* ============================================================
+   Gatekeeper — Act I: The Threshold
+   ============================================================ */
+
+.gate {
+  position: relative;
+  z-index: var(--z-overlay);          /* sit above any fixed cockpit */
+  width: 100%;
+  min-height: 100vh;
+  min-height: 100dvh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  background-color: var(--color-umber);
+  overflow: hidden;
+  gap: var(--space-lg);
+}
+
+/* ── Prompt ─────────────────────────────────── */
+
+.prompt {
+  font-family: var(--font-serif);
+  font-weight: 350;
+  font-size: clamp(1.4rem, 3.5vw, 2.8rem);
+  color: var(--color-silk);
+  text-align: center;
+  line-height: 1.4;
+  opacity: 0;
+  /* GSAP will animate this in */
+}
+
+/* ── Shared gate button ────────────────────── */
+
+.gateButton {
+  position: relative;
+  background: none;
+  border: 1px solid var(--color-ember);
+  color: var(--color-ember);
+  font-family: var(--font-sans);
+  font-weight: 300;
+  font-size: 0.85rem;
+  letter-spacing: var(--tracking-sans);
+  text-transform: uppercase;
+  padding: 0.65rem 2.4rem;
+  cursor: pointer;
+  transition: background-color 0.4s ease, color 0.4s ease;
+}
+
+.gateButton:hover,
+.gateButton:focus-visible {
+  background-color: var(--color-ember);
+  color: var(--color-umber);
+  outline: none;
+}
+
+/* Ghost variant (dimmer border) */
+.gateButtonGhost {
+  border-color: rgba(199, 154, 147, 0.4);
+}
+
+.gateButtonGhost:hover,
+.gateButtonGhost:focus-visible {
+  border-color: var(--color-ember);
+  background-color: var(--color-ember);
+}
+
+/* ── Button row (identity step) ────────────── */
+
+.buttonRow {
+  display: flex;
+  gap: 1.4rem;
+  opacity: 0;
+  will-change: opacity;
+}
+
+/* ── Rejection card ────────────────────────── */
+
+.rejectedCard {
+  text-align: center;
+  max-width: 28rem;
+  opacity: 0;
+  will-change: opacity, transform;
+}
+
+.rejectedText {
+  font-family: var(--font-serif);
+  font-weight: 350;
+  font-size: clamp(1.1rem, 2.5vw, 1.6rem);
+  color: var(--color-silk);
+  letter-spacing: 0.02em;
+  line-height: 1.6;
+  margin-bottom: 1.2rem;
+}
+
+.rejectedSub {
+  font-family: var(--font-sans);
+  font-weight: 300;
+  font-size: 0.85rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--color-ember);
+}
+
+/* ── Password step ─────────────────────────── */
+
+.passwordBlock {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1.4rem;
+  opacity: 0;
+  will-change: opacity, transform;
+}
+
+.passwordPrompt {
+  font-family: var(--font-serif);
+  font-weight: 350;
+  font-size: clamp(1.2rem, 2.8vw, 1.8rem);
+  color: var(--color-silk);
+  letter-spacing: 0.02em;
+}
+
+.passwordHint {
+  font-family: var(--font-sans);
+  font-weight: 300;
+  font-size: 0.72rem;
+  letter-spacing: 0.08em;
+  color: var(--color-silk);
+  opacity: 0.35;
+  margin-top: -0.9rem;
+}
+
+.passwordForm {
+  display: flex;
+  gap: 1rem;
+  align-items: center;
+}
+
+.passwordInput {
+  width: clamp(10rem, 22vw, 16rem);
+  padding: 0.55em 1em;
+  font-family: var(--font-sans);
+  font-weight: 300;
+  font-size: 0.95rem;
+  letter-spacing: 0.06em;
+  color: var(--color-silk);
+  background: transparent;
+  border: 1px solid var(--color-ember);
+  border-radius: 2px;
+  outline: none;
+  transition: border-color 0.3s ease;
+}
+
+.passwordInput:focus {
+  border-color: var(--color-silk);
+}
+
+.passwordError {
+  font-family: var(--font-sans);
+  font-weight: 300;
+  font-size: 0.8rem;
+  letter-spacing: 0.06em;
+  color: var(--color-ember);
+  opacity: 0;
+  will-change: opacity;
+}
+
+/* ── Loading bar (appears during exhale) ───── */
+
+.loadBar {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  height: 2px;
+  background-color: var(--color-ember);
+  opacity: 0.5;
+  transform-origin: left;
+  transform: scaleX(0);
+  transition: transform 0.3s ease;
+}
+
+/* ── Exhale overlay (exit transition) ──────── */
+
+.exhale {
+  position: fixed;
+  inset: 0;
+  background-color: var(--color-umber);
+  pointer-events: none;
+  z-index: var(--z-overlay);
+  opacity: 0;
+}

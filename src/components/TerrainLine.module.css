@@ -1,0 +1,33 @@
+/* ============================================================
+   TerrainLine — Continuous Ground Contour Layers
+   ============================================================
+   Renders 3 procedural SVG terrain layers (far / mid / near)
+   whose shapes morph with the elevation prop.
+   
+   Positioned absolutely inside ParallaxWorld, behind the
+   biome detail layers but providing the continuous ground line
+   that eliminates visual disconnect between biomes.
+   ============================================================ */
+
+.terrain {
+  position: absolute;
+  inset: 0;
+  z-index: 0;            /* behind biome detail layers */
+  overflow: hidden;
+  pointer-events: none;
+}
+
+/* ── Depth layers — same pattern as ParallaxWorld layers ── */
+
+.layerFar {
+  will-change: transform;
+  /* Parallax transform applied by ParallaxWorld */
+}
+
+.layerMid {
+  will-change: transform;
+}
+
+.layerNear {
+  will-change: transform;
+}

@@ -1,0 +1,73 @@
+/* ============================================================
+   Act 0 — The Video Message
+   ============================================================
+   Full-screen video stage with responsive aspect ratios.
+   16:9 on desktop, 4:3 on mobile.
+*/
+
+/* ── Stage: centres the video vertically on a full viewport ── */
+.videoStage {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  min-height: 100vh;
+  background: var(--color-umber);
+  overflow: hidden;
+}
+
+/* ── Video wrapper: enforces aspect ratio ── */
+.videoWrap {
+  position: relative;
+  width: min(90vw, 960px);
+  aspect-ratio: 16 / 9;
+  border-radius: 4px;
+  overflow: hidden;
+  opacity: 0; /* GSAP will animate this */
+}
+
+@media (max-width: 768px) {
+  .videoWrap {
+    width: 92vw;
+    aspect-ratio: 4 / 3;
+  }
+}
+
+/* ── The video element ── */
+.video {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  background: var(--color-umber);
+}
+
+/* ── Placeholder shown until the real video file is added ── */
+.placeholder {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-sm);
+  background: var(--color-umber);
+  border: 1px solid var(--color-silk-20);
+  border-radius: 4px;
+  pointer-events: none;
+}
+
+.placeholderIcon {
+  font-size: 2.5rem;
+  color: var(--color-silk-20);
+  line-height: 1;
+}
+
+.placeholderText {
+  font-family: var(--font-sans);
+  font-size: 0.85rem;
+  letter-spacing: var(--tracking-sans);
+  color: var(--color-silk-20);
+  text-align: center;
+  max-width: 28ch;
+}

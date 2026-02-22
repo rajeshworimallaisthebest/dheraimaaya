@@ -1,0 +1,65 @@
+/* ============================================================
+   Act IV — The Resonance (Letter)
+   ============================================================
+   Focus-scroll typography, ink-in reveal.
+*/
+
+/* ── Container ── */
+.resonanceContainer {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 100%;
+  min-height: 480vh;
+  padding: 40vh 0 55vh;
+}
+
+/* ── Letter line ── */
+.letterLine {
+  font-family: var(--font-serif);
+  font-weight: 350;
+  font-size: clamp(1.125rem, 2.4vw, 1.75rem);
+  color: var(--color-silk);
+  line-height: 1.7;
+  text-align: center;
+  max-width: 38ch;
+  padding: 0.35em var(--space-md);
+  word-break: keep-all;
+  overflow-wrap: normal;
+  white-space: normal;
+  opacity: 0.15;
+  filter: blur(3px);
+  will-change: opacity, filter;
+}
+
+/* ── Word wrappers keep characters together — no mid-word breaks ── */
+.letterLine :global(.word) {
+  display: inline-block;
+  white-space: nowrap;
+}
+
+/* ── Ink-in: SplitText chars start invisible ── */
+.letterLine :global(.char) {
+  opacity: 0;
+  display: inline-block;
+}
+
+/* ── Section label ── */
+.actLabel {
+  color: var(--color-silk-20);
+  font-size: 0.75rem;
+  margin-bottom: var(--space-lg);
+}
+
+/* ── Reduced motion ── */
+@media (prefers-reduced-motion: reduce) {
+  .letterLine {
+    filter: none !important;
+    opacity: 0.15;
+  }
+
+  .letterLine :global(.char) {
+    opacity: 1 !important;
+  }
+}

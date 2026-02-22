@@ -1,0 +1,132 @@
+/**
+ * HorizonStage — Act V: The Future Horizon
+ * ==========================================
+ * Full-viewport afterglow composition.
+ * Layers (bottom → top):
+ *   1. Sky gradient     (.skyLayer)      ← time-aware, Steps 4–6
+ *   2. Atmospheric fill (.atmosphereLayer) ← clouds/particles, Step 7
+ *   3. Horizon silhouette (.horizonLine) ← subtle foreground, Step 7
+ *   4. Final message    (.message)       ← serif closer, Steps 8–9
+ */
+
+/* ── Stage root ── */
+.stage {
+  position: relative;
+  width: 100%;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-end; /* anchor message near bottom third */
+  overflow: hidden;
+  padding-bottom: 10vh;
+}
+
+/* ── Sky gradient layer ── */
+/* Layer 1 is now owned by HorizonSky.tsx (HorizonSky.module.css).
+   GSAP tweens a RGB proxy, then writes `background` imperatively
+   on each animation tick — no CSS transition needed here. */
+
+/* ── Scenery container (GlobalFar + GlobalMid BiomeScenery layers) ── */
+/* Clips the 300%-wide SVGs to the viewport. No horizontal scrolling in
+   Act V — these sit static, showing the left-to-centre cloud bands. */
+.sceneryContainer {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  pointer-events: none;
+  z-index: 1;
+  opacity: 0.45; /* Pulled back so sky gradient reads clearly beneath */
+}
+
+/* ── Atmospheric layer (CloudWisps wrapper) ── */
+.atmosphereLayer {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  z-index: 2; /* Sits above scenery */
+  opacity: 0.6; /* Wispy, barely-there drift */
+}
+
+/* ── Horizon silhouette line ── */
+/* A very subtle ember-tinted band near the horizon, mimicking the
+   ember glow found in BiomeScenery's global horizon layers. */
+.horizonLine {
+  position: absolute;
+  bottom: 22%;
+  left: 0;
+  right: 0;
+  height: 1px;
+  background: var(--color-ember);
+  opacity: 0.18;
+  z-index: 2;
+}
+
+/* ── Final serif message container ── */
+.message {
+  position: relative;
+  z-index: 3;
+
+  /* Layout only — individual lines carry their own opacity/blur */
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.55em;
+
+  /* Newsreader serif, variable-weight axis open for GSAP animation */
+  font-family: var(--font-serif);
+  font-weight: 300;
+  font-variation-settings: 'wght' 300;
+
+  /* Large, delicate, with extreme tracking */
+  font-size: clamp(1.0rem, 2.2vw, 1.85rem);
+  line-height: 1.65;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+
+  color: var(--color-silk);
+  text-align: center;
+
+  /* Constrain width for intimate, editorial feel */
+  max-width: min(72ch, 90vw);
+}
+
+/* ── Individual message line ── */
+/* GSAP starts each line invisible and blurred, then staggers them in.
+   will-change is set so the GPU pre-promotes the layer before animation. */
+.messageLine {
+  display: block;
+  opacity: 0;
+  filter: blur(5px);
+  transform: translateY(10px); /* subtle lift-into-place */
+  will-change: opacity, filter, transform;
+}
+
+/* Reduced-motion: reveal immediately without GSAP involvement.
+   JS also checks matchMedia and skips the breathing loop entirely. */
+@media (prefers-reduced-motion: reduce) {
+  .messageLine {
+    opacity: 1;
+    filter: blur(0);
+    transform: none;
+    will-change: auto;
+  }
+}
+
+/* ── Accent rule above message ── */
+.messageRule {
+  position: relative;
+  z-index: 3;
+  width: 32px;
+  height: 1px;
+  background: var(--color-ember);
+  /* Start invisible — GSAP entrance animates to 0.55 */
+  opacity: 0;
+  margin-bottom: 2.4rem;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .messageRule {
+    opacity: 0.55;
+  }
+}

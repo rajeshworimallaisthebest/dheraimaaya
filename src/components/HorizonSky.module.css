@@ -1,0 +1,40 @@
+/**
+ * HorizonSky — Act V Weather-Driven Sky Layer
+ * ===============================================
+ * A full-viewport container with two visual layers:
+ *   1. Background gradient — set imperatively by GSAP via an RGB proxy.
+ *   2. SVG overlay         — one of 10 weather-scene SVGs.
+ *
+ * All positioning is absolute so the sky sits below every other
+ * HorizonStage layer (z-index: 0).
+ */
+
+.sky {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+
+  /* Initial colour: umber — GSAP will overwrite `background` immediately
+     on first mount, so this is only ever briefly visible. */
+  background: #1A1816;
+
+  /* No CSS transition — GSAP owns all gradient interpolation to prevent
+     competing animations and browser-gradient-transition quirks. */
+  transition: none;
+
+  /* Accessibility: decorative visual only */
+  pointer-events: none;
+  user-select: none;
+}
+
+/* SVG weather-scene overlay — sits above the gradient background,
+   below all other HorizonStage layers. Inherits pointer-events: none
+   from .sky so user interactions fall through to interactive layers. */
+.svgLayer {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  overflow: hidden;
+  pointer-events: none;
+  user-select: none;
+}

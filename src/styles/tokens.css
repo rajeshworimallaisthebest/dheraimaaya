@@ -1,0 +1,74 @@
+/* ============================================================
+   Project Pyari — "The Resonance" Design System Tokens
+   ============================================================ */
+
+/* --- Fonts ------------------------------------------------- */
+@font-face {
+  font-family: 'Newsreader';
+  src: url('../assets/fonts/Newsreader-Variable.woff2') format('woff2');
+  font-weight: 300 800;
+  font-display: swap;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'Newsreader';
+  src: url('../assets/fonts/Newsreader-Variable-Italic.woff2') format('woff2');
+  font-weight: 300 800;
+  font-display: swap;
+  font-style: italic;
+}
+
+@font-face {
+  font-family: 'General Sans';
+  src: url('../assets/fonts/GeneralSans-Variable.woff2') format('woff2');
+  font-weight: 200 700;
+  font-display: swap;
+  font-style: normal;
+}
+
+/* --- Custom Properties ------------------------------------- */
+:root {
+  /* Palette */
+  --color-umber: #1A1816;
+  --color-silk: #EBE7E0;
+  --color-ember: #C79A93;
+
+  /* Palette — alpha variants */
+  --color-silk-20: rgba(235, 231, 224, 0.2);
+  --color-silk-40: rgba(235, 231, 224, 0.4);
+  --color-silk-60: rgba(235, 231, 224, 0.6);
+  --color-ember-15: rgba(199, 154, 147, 0.15);
+  --color-ember-60: rgba(199, 154, 147, 0.6);
+
+  /* Palette — biome-specific accents */
+  --color-foliage: #4A6741;   /* muted forest green */
+  --color-sky-tint: #5B7B8A;  /* dusty blue */
+  --color-snow: #D4D0C8;      /* warm off-white */
+  --color-earth: #8B7355;     /* warm brown */
+
+  /* Typography */
+  --font-serif: 'Newsreader', 'Georgia', serif;
+  --font-sans: 'General Sans', 'Helvetica Neue', sans-serif;
+
+  --tracking-sans: 0.08em;
+  --tracking-extreme: 0.3em;
+
+  /* Spacing scale (8px base) */
+  --space-xs: 0.5rem;   /*  8px */
+  --space-sm: 1rem;      /* 16px */
+  --space-md: 2rem;      /* 32px */
+  --space-lg: 4rem;      /* 64px */
+  --space-xl: 8rem;      /* 128px */
+
+  /* Timing */
+  --duration-fast: 300ms;
+  --duration-base: 600ms;
+  --duration-slow: 1200ms;
+
+  /* Z-index layers */
+  --z-base: 1;
+  --z-overlay: 100;
+  --z-modal: 200;
+  --z-top: 999;
+}
