@@ -149,7 +149,7 @@ const MosaicScene = forwardRef<MosaicSceneHandle, Props>((
       const tilePaths: string[] = [];
       for (let r = 0; r < rows; r++) {
         for (let c = 0; c < cols; c++) {
-          tilePaths.push(`/mosaic/tile_r${r}_c${c}.webp`);
+          tilePaths.push(`${import.meta.env.BASE_URL}mosaic/tile_r${r}_c${c}.webp`);
         }
       }
 
@@ -167,7 +167,7 @@ const MosaicScene = forwardRef<MosaicSceneHandle, Props>((
       // Now create sprites from the cached assets with proper positioning
       for (let r = 0; r < rows; r++) {
         for (let c = 0; c < cols; c++) {
-          const tilePath = `/mosaic/tile_r${r}_c${c}.webp`;
+          const tilePath = `${import.meta.env.BASE_URL}mosaic/tile_r${r}_c${c}.webp`;
           const sprite = Sprite.from(tilePath);
           sprite.x = offsetX + c * scaledTileW;
           sprite.y = offsetY + r * scaledTileH;

@@ -51,6 +51,21 @@ export interface WeatherData {
   isDay: boolean;
 }
 
+// ── Human-readable labels per sky state ──────────────────────────────────
+
+export const SKY_STATE_LABELS: Record<WeatherSkyState, string> = {
+  'clear-day': 'Sunny',
+  'clear-night': 'Clear',
+  'partly-cloudy-day': 'Partly Cloudy',
+  'partly-cloudy-night': 'Partly Cloudy',
+  'cloudy': 'Cloudy',
+  'rain': 'Rain',
+  'heavy-rain': 'Heavy Rain',
+  'thunderstorm': 'Thunderstorm',
+  'snow': 'Snow',
+  'fog': 'Fog',
+};
+
 // ── Gradient Palettes ─────────────────────────────────────────────────────
 // Muted, editorial gradients that harmonise with the umber / silk / ember
 // palette while conveying weather mood and time-of-day.
@@ -120,7 +135,7 @@ function fallbackData(): WeatherData {
   return {
     skyState,
     gradient: WEATHER_GRADIENTS[skyState],
-    conditionText: 'Clear',
+    conditionText: SKY_STATE_LABELS[skyState],
     isDay,
   };
 }
@@ -129,7 +144,7 @@ function fallbackData(): WeatherData {
 
 const API_KEY    = import.meta.env.VITE_WEATHER_API_KEY as string | undefined;
 const QUERY      = 'Topeka,KS';
-const REFRESH_MS = 1 * 60 * 60 * 1000; // 1 hour
+const REFRESH_MS = 10 * 60 * 1000; // 10 minutes — aligns with WeatherAPI free tier
 
 // ── Hook ──────────────────────────────────────────────────────────────────
 
@@ -150,6 +165,8 @@ export function useTopekaWeather(): WeatherData {
       busyRef.current = true;
 
       try {
+        console.info('[useTopekaWeather] Fetching WeatherAPI current conditions for Topeka, KS…');
+
         const res = await fetch(
           `https://api.weatherapi.com/v1/current.json?key=${API_KEY}&q=${QUERY}&aqi=no`,
         );
@@ -163,11 +180,18 @@ export function useTopekaWeather(): WeatherData {
         setData({
           skyState,
           gradient: WEATHER_GRADIENTS[skyState],
-          conditionText: c.condition.text,
+          conditionText: SKY_STATE_LABELS[skyState],
           isDay,
         });
+
+        console.info('[useTopekaWeather] WeatherAPI → sky state resolved', {
+          conditionText: c.condition.text,
+          conditionCode: c.condition.code,
+          isDay,
+          skyState,
+        });
       } catch (err) {
-        console.warn('[useTopekaWeather] Fetch failed, retaining previous state:', err);
+        console.warn('[useTopekaWeather] Fetch failed, retaining previous state (time-based fallback in effect if no prior data):', err);
       } finally {
         busyRef.current = false;
       }

@@ -427,7 +427,7 @@ export const milestones: Milestone[] = [
     memoryCard: {
       title: 'November 15th',
       body: 'If I had a time machine, I would visit November 15th again in a heartbeat. It was the best day of my life, and I want to experience it again and again.',
-      photo: '/mosaic/capitol-date.jpeg',
+      photo: `${import.meta.env.BASE_URL}mosaic/capitol-date.jpeg`,
     },
   },
   {
@@ -557,7 +557,7 @@ export const milestones: Milestone[] = [
     memoryCard: {
       title: 'Chicago Blues',
       body: 'look at you!!!',
-      photo: '/mosaic/chicago.jpeg',
+      photo: `${import.meta.env.BASE_URL}mosaic/chicago.jpeg`,
     },
   },
 
@@ -578,7 +578,7 @@ export const milestones: Milestone[] = [
     memoryCard: {
       title: 'Hong Kong Highs',
       body: 'Look at you and the skyline!!!',
-      photo: '/mosaic/hongkong.jpeg',
+      photo: `${import.meta.env.BASE_URL}mosaic/hongkong.jpeg`,
     },
   },
 
@@ -599,7 +599,7 @@ export const milestones: Milestone[] = [
     memoryCard: {
       title: 'Star Ferry',
       body: 'Just look at that view, and you!',
-      photo: '/mosaic/star-ferry.jpeg',
+      photo: `${import.meta.env.BASE_URL}mosaic/star-ferry.jpeg`,
     }
   },
 
@@ -745,7 +745,7 @@ export const milestones: Milestone[] = [
     memoryCard: {
       title: 'The Peak',
       body: 'I wish to have trips like this more often. Just you and me, and the world.',
-      photo: '/mosaic/sapphire-point.jpeg',
+      photo: `${import.meta.env.BASE_URL}mosaic/sapphire-point.jpeg`,
     },
   },
 ];
@@ -895,19 +895,19 @@ export const voiceSnippets: VoiceSnippet[] = [
   {
     id: 'vs-01',
     label: 'Nickname whisper',
-    audioFile: '/audio/snippet-nickname.m4a',
+    audioFile: `${import.meta.env.BASE_URL}audio/snippet-nickname.m4a`,
     description: 'A softly whispered nickname.',
   },
   {
     id: 'vs-02',
     label: 'Laugh fragment',
-    audioFile: '/audio/snippet-laugh.m4a',
+    audioFile: `${import.meta.env.BASE_URL}audio/snippet-laugh.m4a`,
     description: 'A two-second burst of candid laughter.',
   },
   {
     id: 'vs-03',
     label: '"Remember?"',
-    audioFile: '/audio/snippet-remember.m4a',
+    audioFile: `${import.meta.env.BASE_URL}audio/snippet-remember.m4a`,
     description: 'A single word: "Remember?"',
   },
   // ── Placeholder entries — add audio files to public/audio to enable ──

@@ -5,8 +5,7 @@
  * Layers (bottom → top):
  *   1. Sky gradient     (.skyLayer)      ← time-aware, Steps 4–6
  *   2. Atmospheric fill (.atmosphereLayer) ← clouds/particles, Step 7
- *   3. Horizon silhouette (.horizonLine) ← subtle foreground, Step 7
- *   4. Final message    (.message)       ← serif closer, Steps 8–9
+ *   3. Final message    (.message)       ← serif closer, Steps 8–9
  */
 
 /* ── Stage root ── */
@@ -46,20 +45,6 @@
   pointer-events: none;
   z-index: 2; /* Sits above scenery */
   opacity: 0.6; /* Wispy, barely-there drift */
-}
-
-/* ── Horizon silhouette line ── */
-/* A very subtle ember-tinted band near the horizon, mimicking the
-   ember glow found in BiomeScenery's global horizon layers. */
-.horizonLine {
-  position: absolute;
-  bottom: 22%;
-  left: 0;
-  right: 0;
-  height: 1px;
-  background: var(--color-ember);
-  opacity: 0.18;
-  z-index: 2;
 }
 
 /* ── Final serif message container ── */
@@ -113,20 +98,4 @@
   }
 }
 
-/* ── Accent rule above message ── */
-.messageRule {
-  position: relative;
-  z-index: 3;
-  width: 32px;
-  height: 1px;
-  background: var(--color-ember);
-  /* Start invisible — GSAP entrance animates to 0.55 */
-  opacity: 0;
-  margin-bottom: 2.4rem;
-}
-
-@media (prefers-reduced-motion: reduce) {
-  .messageRule {
-    opacity: 0.55;
-  }
-}
+/* Accent rule removed (visual simplification) */

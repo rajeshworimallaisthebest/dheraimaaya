@@ -56,7 +56,7 @@ export default function App() {
 
   // ── Piano ambient track — loops throughout the entire experience ──
   const { play: playPiano } = useAudio({
-    src: '/audio/intro_greeting.mp3',
+    src: `${import.meta.env.BASE_URL}audio/intro_greeting.mp3`,
     filterFrequency: 800,
     loop: true,
     targetVolume: 0.5,

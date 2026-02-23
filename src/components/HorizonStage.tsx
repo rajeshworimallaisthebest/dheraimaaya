@@ -5,8 +5,7 @@
  *   1. HorizonSky        — live Topeka time-of-day gradient       (Step 6)
  *   2. GlobalFar + Mid   — static BiomeScenery horizon silhouettes (Step 7)
  *   3. CloudWisps        — slow atmospheric drift                  (Step 7)
- *   4. Ember horizon line — structural depth cue, ScrollTrigger-pulsed (Step 9)
- *   5. Final serif message — staggered entrance + breathing weight  (Steps 8–9)
+ *   4. Final serif message — staggered entrance + breathing weight  (Steps 8–9)
  *
  * Audio (Step 10): optional ambient track fades in when isActive becomes
  * true for the first time. Leave `ambientSrc` undefined until an audio
@@ -44,7 +43,6 @@ export default function HorizonStage({ isActive, smootherReady, ambientSrc }: Pr
   const stageRef = useRef<HTMLDivElement>(null);
 
   // Per-line message refs for staggered entrance
-  const ruleRef  = useRef<HTMLDivElement>(null);
   const line1Ref = useRef<HTMLSpanElement>(null);
   const line2Ref = useRef<HTMLSpanElement>(null);
   const line3Ref = useRef<HTMLSpanElement>(null);
@@ -55,12 +53,6 @@ export default function HorizonStage({ isActive, smootherReady, ambientSrc }: Pr
   // Ref to the slow breathing tween — created outside the useGSAP scope
   // after the entrance completes, so it must be killed manually.
   const breathingTweenRef = useRef<gsap.core.Tween | null>(null);
-
-  // Direct ref to the ember horizon line — avoids a classList querySelector
-  // being called every ScrollTrigger scrub tick (could be 60× per second).
-  const horizonLineRef = useRef<HTMLDivElement>(null);
-
-
 
   // ── Optional ambient audio (Step 10) ─────────────────────────────────────
   // Hook is always called unconditionally (React rules) but play() is gated
@@ -82,13 +74,7 @@ export default function HorizonStage({ isActive, smootherReady, ambientSrc }: Pr
 
       const tl = gsap.timeline({ defaults: { ease: 'power4.out' } });
 
-      // 1. Accent rule fades up
-      tl.to(ruleRef.current, {
-        opacity: 0.55,
-        duration: 0.9,
-      });
-
-      // 2. Lines lift and unblur with an editorial stagger
+      // Lines lift and unblur with an editorial stagger
       tl.fromTo(
         lines,
         { opacity: 0, filter: 'blur(5px)', y: 10 },
@@ -103,7 +89,7 @@ export default function HorizonStage({ isActive, smootherReady, ambientSrc }: Pr
         '-=0.4',
       );
 
-      // 3. Slow weight-breathing on the Newsreader variable axis.
+      // Slow weight-breathing on the Newsreader variable axis.
       //    `fontWeight` maps directly to the 'wght' axis on variable fonts
       //    and is safely GSAP-interpolatable as a plain numeric CSS property.
       //    Each line shifts phase (stagger from center) for an organic pulse.
@@ -125,7 +111,7 @@ export default function HorizonStage({ isActive, smootherReady, ambientSrc }: Pr
         }, '+=0.6');
       }
 
-      // 4. Start ambient audio on entry (no-op if ambientSrc is absent)
+      // Start ambient audio on entry (no-op if ambientSrc is absent)
       if (ambientSrc) {
         tl.add(() => { audio.play(); }, 0.3);
       }
@@ -151,34 +137,6 @@ export default function HorizonStage({ isActive, smootherReady, ambientSrc }: Pr
     };
   }, []);
 
-  // ── ScrollTrigger: horizon pulse (Step 9) ───────────────────────────────
-  // Sine-shaped: the ember horizon line brightens as the act enters view,
-  // peaks at center of scroll, then dims as the act leaves. Subtle but
-  // gives the landscape a sense of living light without distraction.
-  useGSAP(
-    () => {
-      if (!smootherReady) return;
-      const section = document.getElementById('act-horizon');
-      if (!section) return;
-
-      ScrollTrigger.create({
-        trigger: section,
-        start: 'top bottom',
-        end: 'bottom top',
-        scrub: 2,
-        onUpdate(self) {
-          const pulse = Math.sin(self.progress * Math.PI); // 0 → 1 → 0
-          if (horizonLineRef.current) {
-            horizonLineRef.current.style.opacity =
-              String((0.12 + pulse * 0.20).toFixed(3));
-          }
-        },
-      });
-
-    },
-    { scope: stageRef, dependencies: [smootherReady] },
-  );
-
   // ── Render ────────────────────────────────────────────────────────────────────────────
   return (
     <div ref={stageRef} className={styles.stage} aria-label="Act V — The Future Horizon">
@@ -202,14 +160,7 @@ export default function HorizonStage({ isActive, smootherReady, ambientSrc }: Pr
         <CloudWisps />
       </div>
 
-      {/* Layer 4: Ember horizon anchor line
-           Opacity is driven by the smootherReady ScrollTrigger above. */}
-      <div ref={horizonLineRef} className={styles.horizonLine} aria-hidden="true" />
-
-      {/* Layer 5: Accent rule */}
-      <div ref={ruleRef} className={styles.messageRule} aria-hidden="true" />
-
-      {/* Layer 6: Final closing message — three separately animatable lines.
+       {/* Layer 4: Final closing message — three separately animatable lines.
            role="heading" aria-level="2" provides a landmark heading for
            screen readers without introducing unstyled heading markup. */}
       <p

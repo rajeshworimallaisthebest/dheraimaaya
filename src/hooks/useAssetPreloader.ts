@@ -34,7 +34,7 @@ function getTileUrls(): string[] {
   const urls: string[] = [];
   for (let r = 0; r < rows; r++) {
     for (let c = 0; c < cols; c++) {
-      urls.push(`/mosaic/tile_r${r}_c${c}.webp`);
+      urls.push(`${import.meta.env.BASE_URL}mosaic/tile_r${r}_c${c}.webp`);
     }
   }
   return urls;
