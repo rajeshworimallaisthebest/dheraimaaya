@@ -16,7 +16,7 @@ import { gsap, useGSAP } from '../lib/gsapSetup';
 import styles from './Act0_Video.module.css';
 
 /** Path inside /public — swap once the real file is ready */
-const VIDEO_SRC = `${import.meta.env.BASE_URL}video/message.mp4`;
+const VIDEO_SRC = `${import.meta.env.BASE_URL}video/intro-message.mp4`;
 
 interface Props {
   /** Called after the video finishes + fade-out completes */
