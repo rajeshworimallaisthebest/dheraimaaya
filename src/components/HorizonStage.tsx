@@ -13,7 +13,7 @@
  */
 
 import { useRef, useEffect } from 'react';
-import { gsap, ScrollTrigger, useGSAP } from '../lib/gsapSetup';
+import { gsap, useGSAP } from '../lib/gsapSetup';
 import { useAudio } from '../hooks/useAudio';
 import HorizonSky from './HorizonSky';
 import CloudWisps from './CloudWisps';
@@ -38,7 +38,7 @@ interface Props {
 }
 
 // ── Component ────────────────────────────────────────────────────────────────────────────
-export default function HorizonStage({ isActive, smootherReady, ambientSrc }: Props) {
+export default function HorizonStage({ isActive, smootherReady: _smootherReady, ambientSrc }: Props) {
   // Scope ref for useGSAP — limits selector queries & auto-cleanup
   const stageRef = useRef<HTMLDivElement>(null);
 
